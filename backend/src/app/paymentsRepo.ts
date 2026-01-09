@@ -1,12 +1,19 @@
-import pool from './pool'
+import pool from '../pool'
 
 export const paymentsRepo = {
-  addOrder: (productId: number, sessionId: string | null) => {
+  findProductByID: (id: number) => {
     return pool.query(
-      `INSERT INTO orders (product_id, stripe_session_id)
-      VALUES ($1, $2)
+      `SELECT * FROM products
+      WHERE id = $1`,
+      [id]
+    )
+  },
+  addOrder: (productId: number) => {
+    return pool.query(
+      `INSERT INTO orders (product_id)
+      VALUES ($1)
       RETURNING *`,
-      [productId, sessionId]
+      [productId]
     )
   },
   updateOrderSessionId: (sessionId: string, orderId: number) => {

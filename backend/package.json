@@ -1,8 +1,8 @@
 {
   "type": "module",
   "dependencies": {
+    "@types/express": "^5.0.6",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1",
     "pg-pool": "^3.10.1",
     "stripe": "^20.1.2"
   },

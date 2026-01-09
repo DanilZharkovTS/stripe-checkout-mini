@@ -1,4 +1,4 @@
-import pool from '../pool'
+import pool from '../pool.ts'
 
 export const paymentsRepo = {
   findProductByID: (id: number) => {
@@ -22,8 +22,7 @@ export const paymentsRepo = {
       SET stripe_session_id = $1
       WHERE id = $2
       RETURNING *`,
-      sessionId,
-      orderId
+      [sessionId, orderId]
     )
   },
 }

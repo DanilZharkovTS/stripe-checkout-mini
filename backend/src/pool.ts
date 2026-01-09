@@ -1,8 +1,7 @@
-import pkg from 'pg-pool'
+import pkg from 'pg'
 const { Pool } = pkg
 
 const pool = new Pool({
-  user: 'postgres',
   password: 'qwerty1234',
   host: 'localhost',
   port: 5432,

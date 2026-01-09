@@ -2,8 +2,10 @@
   "type": "module",
   "dependencies": {
     "@types/express": "^5.0.6",
+    "@types/pg": "^8.16.0",
     "dotenv": "^17.2.3",
-    "pg-pool": "^3.10.1",
+    "express": "^5.2.1",
+    "pg": "^8.16.3",
     "stripe": "^20.1.2"
   },
   "devDependencies": {

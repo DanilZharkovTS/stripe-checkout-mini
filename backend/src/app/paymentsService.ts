@@ -1,8 +1,10 @@
-import { stripe } from '../config/stripe'
-import { paymentsRepo } from './paymentsRepo'
+import { getStripe } from '../config/stripe.ts'
+import { paymentsRepo } from './paymentsRepo.ts'
 
 export const paymentsService = {
   createCheckoutSession: async (productId: number) => {
+    const stripe = getStripe()
+
     const productResult = await paymentsRepo.findProductByID(productId)
     const dbProduct = productResult.rows[0]
 
@@ -24,7 +26,7 @@ export const paymentsService = {
         {
           price_data: {
             currency: dbProduct.currency,
-            unit_amount: dbProduct.price,
+            unit_amount: Number(dbProduct.price),
             product_data: {
               name: dbProduct.name,
               description: dbProduct.description,
@@ -38,7 +40,7 @@ export const paymentsService = {
       cancel_url: 'http://localhost:3000/cancel',
     })
 
-    await paymentsRepo.updateOrderSessionId(session.id, dbOrder.id)
+     paymentsRepo.updateOrderSessionId(session.id, dbOrder.id)
 
     return { checkoutUrl: session.url }
   },

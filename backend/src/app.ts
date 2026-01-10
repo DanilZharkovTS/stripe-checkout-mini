@@ -2,7 +2,7 @@ import express from 'express'
 import { configDotenv } from 'dotenv'
 import type { Request, Response } from 'express'
 import { appMiddlewares } from './app/middlewares/paymentsMiddlewares.ts'
-import { paymentsController } from './app/paymentsController.ts'
+import { paymentsController } from './app/controllers/paymentsController.ts'
 import bodyParser from 'body-parser'
 
 configDotenv({ path: '../.env' })

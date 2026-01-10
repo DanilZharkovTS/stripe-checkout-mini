@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
-import { paymentsService } from './paymentsService.ts'
+import { paymentsService } from '../services/paymentsService.ts'
 
 export const paymentsController = {
   createCheckoutSession: async (req: Request, res: Response) => {

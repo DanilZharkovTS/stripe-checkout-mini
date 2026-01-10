@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
-import { getStripe } from '../config/stripe.ts'
-import { paymentsRepo } from './paymentsRepo.ts'
+import { getStripe } from '../../config/stripe.ts'
+import { paymentsRepo } from '../repos/paymentsRepo.ts'
 
 export const paymentsService = {
   createCheckoutSession: async (productId: number) => {
@@ -63,6 +63,5 @@ export const paymentsService = {
       default:
         console.log(`Unhandled payment_status: ${session.payment_status}`)
     }
-
   },
 }

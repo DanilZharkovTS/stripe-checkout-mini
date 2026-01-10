@@ -1,5 +1,5 @@
-import pool from '../pool.ts'
-import type { orderStatus } from './paymentsInterfaces.ts'
+import pool from '../../pool.ts'
+import type { orderStatus } from '../types/paymentsInterfaces.ts'
 
 export const paymentsRepo = {
   findProductByID: (id: number) => {

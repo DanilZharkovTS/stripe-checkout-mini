@@ -1,4 +1,5 @@
 import pool from '../pool.ts'
+import type { orderStatus } from './paymentsInterfaces.ts'
 
 export const paymentsRepo = {
   findProductByID: (id: number) => {
@@ -23,6 +24,21 @@ export const paymentsRepo = {
       WHERE id = $2
       RETURNING *`,
       [sessionId, orderId]
+    )
+  },
+  findOrderById: (orderId: number) => {
+    return pool.query(
+      `SELECT * FROM orders
+      WHERE id = $1`,
+      [orderId]
+    )
+  },
+  updateOrderStatus: (status: orderStatus, orderId: number) => {
+    return pool.query(
+      `UPDATE orders 
+      SET status = $1
+      WHERE id = $2`,
+      [status, orderId]
     )
   },
 }

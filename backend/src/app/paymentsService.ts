@@ -1,3 +1,4 @@
+import Stripe from 'stripe'
 import { getStripe } from '../config/stripe.ts'
 import { paymentsRepo } from './paymentsRepo.ts'
 
@@ -40,8 +41,28 @@ export const paymentsService = {
       cancel_url: 'http://localhost:3000/cancel',
     })
 
-     paymentsRepo.updateOrderSessionId(session.id, dbOrder.id)
+    paymentsRepo.updateOrderSessionId(session.id, dbOrder.id)
 
     return { checkoutUrl: session.url }
+  },
+  handleCheckoutSessionCompleted: async (session: Stripe.Checkout.Session) => {
+    const orderResult = await paymentsRepo.findOrderById(
+      Number(session.metadata.orderId)
+    )
+    const dbOrder = orderResult.rows[0]
+    if (!dbOrder) throw new Error(`Order not found`)
+
+    switch (session.payment_status) {
+      case 'paid':
+      case 'no_payment_required':
+        await paymentsRepo.updateOrderStatus('paid', dbOrder.id)
+        break
+      case 'unpaid':
+        await paymentsRepo.updateOrderStatus('failed', dbOrder.id)
+        break
+      default:
+        console.log(`Unhandled payment_status: ${session.payment_status}`)
+    }
+
   },
 }

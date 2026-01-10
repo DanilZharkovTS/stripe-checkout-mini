@@ -9,8 +9,19 @@ export const paymentsController = {
       )
       res.status(200).json(result)
     } catch (err) {
-      console.log(err) 
+      console.log(err)
       return res.status(500)
+    }
+  },
+  handleCheckoutSessionCompleted: async (req: Request, res: Response) => {
+    try {
+      await paymentsService.handleCheckoutSessionCompleted(
+        req.stripeCheckoutSession
+      )
+      res.sendStatus(200)
+    } catch (err) {
+      console.log(err)
+      return res.status(400).json('Bad request')
     }
   },
 }

@@ -4,7 +4,7 @@ import { service } from './service'
 import { product } from './types'
 import Image from 'next/image'
 
-export default function Home() {
+export default function ProductsPage() {
   const [products, setProducts] = useState<product[] | null>(null)
 
   useEffect(() => {

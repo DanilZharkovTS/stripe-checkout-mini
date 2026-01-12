@@ -34,7 +34,7 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen w-full flex justify-center items-center bg-gray-50">
+    <div className="min-h-screen w-full flex justify-center items-center">
       {!products && (
         <div className="text-center text-gray-500">No products found.</div>
       )}

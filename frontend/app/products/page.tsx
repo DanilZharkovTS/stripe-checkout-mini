@@ -3,8 +3,11 @@ import { useEffect, useState } from 'react'
 import { service } from './service'
 import { product } from './types'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 export default function ProductsPage() {
+  const router = useRouter()
+
   const [products, setProducts] = useState<product[] | null>(null)
 
   useEffect(() => {
@@ -19,6 +22,16 @@ export default function ProductsPage() {
     }
     getProducts()
   }, [])
+
+  const handleCheckout = async (productId: number) => {
+    try {
+      const res = await service.getProductCheckout(productId)
+      router.push(res.checkoutUrl)
+    } catch (err) {
+      console.error(err)
+      return
+    }
+  }
 
   return (
     <div className="min-h-screen w-full flex justify-center items-center bg-gray-50">
@@ -65,7 +78,10 @@ export default function ProductsPage() {
                     {p.price} cents
                   </span>
 
-                  <button className="rounded-lg bg-lime-400 px-4 py-2 text-sm font-medium text-black transition hover:bg-lime-500 active:scale-95">
+                  <button
+                    onClick={() => handleCheckout(p.id)}
+                    className="rounded-lg bg-lime-400 px-4 py-2 text-sm font-medium text-black transition hover:bg-lime-500 active:scale-95"
+                  >
                     Buy
                   </button>
                 </div>

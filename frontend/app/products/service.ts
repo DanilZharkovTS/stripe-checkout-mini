@@ -5,4 +5,10 @@ export const service = {
     const res = await axios.get('http://localhost:3000/products')
     return res.data
   },
+  getProductCheckout: async (productId: number) => {
+    const res = await axios.get(
+      `http://localhost:3000/products/${productId}/checkout`
+    )
+    return res.data
+  },
 }

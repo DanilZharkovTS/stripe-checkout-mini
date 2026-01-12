@@ -1,9 +1,11 @@
 import express from 'express'
+import cors from 'cors'
 import { configDotenv } from 'dotenv'
 import type { Request, Response } from 'express'
 import { appMiddlewares } from './app/middlewares/paymentsMiddlewares.ts'
 import { paymentsController } from './app/controllers/paymentsController.ts'
 import bodyParser from 'body-parser'
+import { paymentsRepo } from './app/repos/paymentsRepo.ts'
 
 configDotenv({ path: '../.env' })
 
@@ -17,14 +19,17 @@ app.post(
   paymentsController.handleCheckoutSessionCompleted
 )
 
+app.use(cors({origin: 'http://localhost:3001'}))
+
 app.use(express.json())
 
-app.get('/', (req: Request, res: Response) =>
-  res.status(200).json('Hello World!')
-)
+app.get('/products', async (req: Request, res: Response) => {
+  const result = await paymentsRepo.getAllProducts()
+  return res.status(200).json(result.rows)
+})
 
 app.get(
-  '/:productId/checkout',
+  '/products/:productId/checkout',
   appMiddlewares.setProductId,
   paymentsController.createCheckoutSession
 )

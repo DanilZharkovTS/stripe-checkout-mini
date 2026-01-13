@@ -2,12 +2,12 @@ import express from 'express'
 import cors from 'cors'
 import { configDotenv } from 'dotenv'
 import type { Request, Response } from 'express'
-import { appMiddlewares } from './app/middlewares/paymentsMiddlewares.ts'
-import { paymentsController } from './app/controllers/paymentsController.ts'
+import { appMiddlewares } from './app/middlewares/paymentsMiddlewares.js'
+import { paymentsController } from './app/controllers/paymentsController.js'
 import bodyParser from 'body-parser'
-import { paymentsRepo } from './app/repos/paymentsRepo.ts'
+import { paymentsRepo } from './app/repos/paymentsRepo.js'
 
-configDotenv({ path: '../.env' })
+configDotenv()
 
 const app = express()
 const PORT = process.env.PORT

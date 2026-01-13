@@ -24,7 +24,7 @@ export const appMiddlewares = {
       event = Stripe.webhooks.constructEvent(
         req.body,
         sign,
-        process.env.STRIPE_WEBHOOK_SECRET
+        process.env.STRIPE_WEBHOOK_SECRET!
       )
 
       req.stripeCheckoutSession = event.data.object as Stripe.Checkout.Session

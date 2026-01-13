@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
-import { paymentsService } from '../services/paymentsService.ts'
+import { paymentsService } from '../services/paymentsService.js'
 
 export const paymentsController = {
   createCheckoutSession: async (req: Request, res: Response) => {
@@ -16,7 +16,7 @@ export const paymentsController = {
   handleCheckoutSessionCompleted: async (req: Request, res: Response) => {
     try {
       await paymentsService.handleCheckoutSessionCompleted(
-        req.stripeCheckoutSession
+        req.stripeCheckoutSession!
       )
       res.sendStatus(200)
     } catch (err) {

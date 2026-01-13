@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
-import { getStripe } from '../../config/stripe.ts'
-import { paymentsRepo } from '../repos/paymentsRepo.ts'
+import { getStripe } from '../../config/stripe.js'
+import { paymentsRepo } from '../repos/paymentsRepo.js'
 
 export const paymentsService = {
   createCheckoutSession: async (productId: number) => {
@@ -47,7 +47,7 @@ export const paymentsService = {
   },
   handleCheckoutSessionCompleted: async (session: Stripe.Checkout.Session) => {
     const orderResult = await paymentsRepo.findOrderById(
-      Number(session.metadata.orderId)
+      Number(session.metadata?.orderId)
     )
     const dbOrder = orderResult.rows[0]
     if (!dbOrder) throw new Error(`Order not found`)

@@ -21,7 +21,16 @@ app.post(
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true)
+
+      if (origin === process.env.FRONTEND_URL) {
+        return callback(null, true)
+      }
+
+      return callback(new Error('Not allowed by CORS'))
+    },
+    credentials: true,
   })
 )
 

@@ -9,7 +9,17 @@ configDotenv();
 const app = express();
 const PORT = process.env.PORT;
 app.post('/webhooks/stripe/checkout', bodyParser.raw({ type: 'application/json' }), appMiddlewares.verifyWebhook, paymentsController.handleCheckoutSessionCompleted);
-app.use(cors({ origin: 'http://localhost:3001' }));
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin)
+            return callback(null, true);
+        if (origin === process.env.FRONTEND_URL) {
+            return callback(null, true);
+        }
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+}));
 app.use(express.json());
 app.get('/products', async (req, res) => {
     const result = await paymentsRepo.getAllProducts();

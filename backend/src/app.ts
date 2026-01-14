@@ -21,8 +21,7 @@ app.post(
 
 app.use(
   cors({
-    origin:
-      'https://stripe-checkout-mini-git-develop-danils-projects-d492cc3b.vercel.app',
+    origin: process.env.FRONTEND_URL,
   })
 )
 

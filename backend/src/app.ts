@@ -19,7 +19,12 @@ app.post(
   paymentsController.handleCheckoutSessionCompleted
 )
 
-app.use(cors({origin: 'http://localhost:3001'}))
+app.use(
+  cors({
+    origin:
+      'https://stripe-checkout-mini-git-develop-danils-projects-d492cc3b.vercel.app',
+  })
+)
 
 app.use(express.json())
 

@@ -37,8 +37,8 @@ export const paymentsService = {
         },
       ],
 
-      success_url: 'http://localhost:3001/checkout/success',
-      cancel_url: 'http://localhost:3001/products',
+      success_url: `${process.env.FRONTEND_URL}/checkout/success`,
+      cancel_url: `${process.env.FRONTEND_URL}/products`,
     })
 
     paymentsRepo.updateOrderSessionId(session.id, dbOrder.id)

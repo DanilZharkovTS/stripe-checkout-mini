@@ -1,11 +1,13 @@
 import express from 'express'
+import cors from 'cors'
 import { configDotenv } from 'dotenv'
 import type { Request, Response } from 'express'
-import { appMiddlewares } from './app/middlewares/paymentsMiddlewares.ts'
-import { paymentsController } from './app/controllers/paymentsController.ts'
+import { appMiddlewares } from './app/middlewares/paymentsMiddlewares.js'
+import { paymentsController } from './app/controllers/paymentsController.js'
 import bodyParser from 'body-parser'
+import { paymentsRepo } from './app/repos/paymentsRepo.js'
 
-configDotenv({ path: '../.env' })
+configDotenv()
 
 const app = express()
 const PORT = process.env.PORT
@@ -17,14 +19,30 @@ app.post(
   paymentsController.handleCheckoutSessionCompleted
 )
 
-app.use(express.json())
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true)
 
-app.get('/', (req: Request, res: Response) =>
-  res.status(200).json('Hello World!')
+      if (origin === process.env.FRONTEND_URL) {
+        return callback(null, true)
+      }
+
+      return callback(new Error('Not allowed by CORS'))
+    },
+    credentials: true,
+  })
 )
 
+app.use(express.json())
+
+app.get('/products', async (req: Request, res: Response) => {
+  const result = await paymentsRepo.getAllProducts()
+  return res.status(200).json(result.rows)
+})
+
 app.get(
-  '/:productId/checkout',
+  '/products/:productId/checkout',
   appMiddlewares.setProductId,
   paymentsController.createCheckoutSession
 )

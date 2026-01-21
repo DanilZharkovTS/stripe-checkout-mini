@@ -1,7 +1,10 @@
-import pool from '../../pool.ts'
+import pool from '../../pool.js'
 import type { orderStatus } from '../types/paymentsInterfaces.ts'
 
 export const paymentsRepo = {
+  getAllProducts: () => {
+    return pool.query(`SELECT * FROM products`)
+  },
   findProductByID: (id: number) => {
     return pool.query(
       `SELECT * FROM products

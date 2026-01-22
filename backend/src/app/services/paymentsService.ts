@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { getStripe } from '../../config/stripe.js'
+import { getStripe } from '../../config/stripe/stripe.js'
 import { paymentsRepo } from '../repos/paymentsRepo.js'
 
 export const paymentsService = {
@@ -64,4 +64,7 @@ export const paymentsService = {
         console.log(`Unhandled payment_status: ${session.payment_status}`)
     }
   },
+  createCheckoutSubscriptionSession: async () => {
+
+  }
 }

@@ -38,5 +38,10 @@ export const appMiddlewares = {
       return res.status(400).json({ message: 'Webhook error' })
     }
   },
-  
+  validateSubscriptionInput: async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.body.plan || !req.body.period) {
+      return res.status(400).json({message: 'Plan and period need to be a string'})
+    }
+    next()
+  },
 }

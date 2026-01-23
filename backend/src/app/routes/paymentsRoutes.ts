@@ -19,6 +19,7 @@ router.get(
 
 router.post(
   '/products/subscriptions',
+  appMiddlewares.validateSubscriptionInput,
   paymentsController.createCheckoutSubscriptionSession
 )
 

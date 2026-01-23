@@ -1,11 +1,10 @@
 import express from 'express'
 import cors from 'cors'
 import { configDotenv } from 'dotenv'
-import type { Request, Response } from 'express'
 import { appMiddlewares } from './app/middlewares/paymentsMiddlewares.js'
 import { paymentsController } from './app/controllers/paymentsController.js'
 import bodyParser from 'body-parser'
-import { paymentsRepo } from './app/repos/paymentsRepo.js'
+import paymnetsRoutes from './app/routes/paymentsRoutes.js'
 
 configDotenv()
 
@@ -36,15 +35,6 @@ app.use(
 
 app.use(express.json())
 
-app.get('/products', async (req: Request, res: Response) => {
-  const result = await paymentsRepo.getAllProducts()
-  return res.status(200).json(result.rows)
-})
-
-app.get(
-  '/products/:productId/checkout',
-  appMiddlewares.setProductId,
-  paymentsController.createCheckoutSession
-)
+app.use(paymnetsRoutes)
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))

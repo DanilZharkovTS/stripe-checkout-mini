@@ -1,5 +1,5 @@
 import pool from '../../pool.js'
-import type { orderStatus } from '../types/paymentsInterfaces.ts'
+import type { orderItems, orderStatus } from '../types/paymentsInterfaces.ts'
 
 export const paymentsRepo = {
   getAllProducts: () => {
@@ -12,12 +12,12 @@ export const paymentsRepo = {
       [id]
     )
   },
-  addOrder: (productId: number) => {
+  addOrder: (items: orderItems) => {
     return pool.query(
-      `INSERT INTO orders (product_id)
+      `INSERT INTO orders (payload)
       VALUES ($1)
       RETURNING *`,
-      [productId]
+      [JSON.stringify(items)]
     )
   },
   updateOrderSessionId: (sessionId: string, orderId: number) => {

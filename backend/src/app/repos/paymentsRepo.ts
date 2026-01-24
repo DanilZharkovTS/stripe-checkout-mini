@@ -1,5 +1,10 @@
 import pool from '../../pool.js'
-import type { orderItems, orderStatus } from '../types/paymentsInterfaces.ts'
+import type {
+  orderItems,
+  orderStatus,
+  periods,
+  plans,
+} from '../types/paymentsInterfaces.ts'
 
 export const paymentsRepo = {
   getAllProducts: () => {
@@ -42,6 +47,14 @@ export const paymentsRepo = {
       SET status = $1
       WHERE id = $2`,
       [status, orderId]
+    )
+  },
+  addSubcription: (plan: plans, period: periods) => {
+    return pool.query(
+      `INSERT INTO subscriptions (plan, period)
+      VALUES ($1, $2)
+      RETURNING *`,
+      [plan, period]
     )
   },
 }

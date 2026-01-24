@@ -16,3 +16,7 @@ export interface plan {
   WEEKLY: { priceId: string }
   MONTHLY: { priceId: string }
 }
+
+export type plans = 'BASIC'
+
+export type periods = 'DAYLY' | 'WEEKLY' | 'MONTHLY'

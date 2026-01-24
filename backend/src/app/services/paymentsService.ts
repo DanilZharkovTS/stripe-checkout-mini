@@ -47,23 +47,52 @@ export const paymentsService = {
 
     return { checkoutUrl: session.url }
   },
-  handleCheckoutSessionCompleted: async (session: Stripe.Checkout.Session) => {
+  handleWebhook: async (session: Stripe.Checkout.Session) => {
     const orderResult = await paymentsRepo.findOrderById(
       Number(session.metadata?.orderId)
     )
     const dbOrder = orderResult.rows[0]
+
     if (!dbOrder) throw new Error(`Order not found`)
 
-    switch (session.payment_status) {
-      case 'paid':
-      case 'no_payment_required':
-        await paymentsRepo.updateOrderStatus('paid', dbOrder.id)
+    const orderPayload = dbOrder.payload
+
+    switch (session.mode) {
+      case 'payment':
+        const paymentOrderResult = await paymentsRepo.findOrderById(
+          Number(session.metadata?.orderId)
+        )
+        const dbPaymnetsOrder = paymentOrderResult.rows[0]
+        if (!dbPaymnetsOrder) throw new Error(`Order not found`)
+
+        switch (session.payment_status) {
+          case 'paid':
+          case 'no_payment_required':
+            await paymentsRepo.updateOrderStatus('paid', dbPaymnetsOrder.id)
+            break
+          case 'unpaid':
+            await paymentsRepo.updateOrderStatus('failed', dbPaymnetsOrder.id)
+            break
+          default:
+            console.log(`Unhandled payment_status: ${session.payment_status}`)
+        }
         break
-      case 'unpaid':
-        await paymentsRepo.updateOrderStatus('failed', dbOrder.id)
+      case 'subscription':
+        switch (session.payment_status) {
+          case 'paid':
+            await paymentsRepo.updateOrderStatus('paid', dbOrder.id)
+
+            await paymentsRepo.addSubcription(
+              orderPayload.plan,
+              orderPayload.period
+            )
+            break
+          case 'unpaid':
+            await paymentsRepo.updateOrderStatus('failed', dbOrder.id)
+            break
+        }
+
         break
-      default:
-        console.log(`Unhandled payment_status: ${session.payment_status}`)
     }
   },
   createCheckoutSubscriptionSession: async (data: SubscriptionSessionDTO) => {
@@ -95,7 +124,8 @@ export const paymentsService = {
       payment_method_types: ['card'],
       line_items: [{ price: period.priceId, quantity: 1 }],
       metadata: { orderId: dbOrder.id },
-      success_url: 'https://st.perplexity.ai/estatic/0b226c450798410ac541646c86ec31afd840e5beab817a5d84fa821e7db61981ec84c3b4a3f072a7a2e1899c9fb06c6e6d50742ef4cc9be45bd161a949eee4e1276d8a0086f9d65cd459731d8793da248383e7765f1d3ca2586e10c41eedf169'
+      success_url:
+        'https://st.perplexity.ai/estatic/0b226c450798410ac541646c86ec31afd840e5beab817a5d84fa821e7db61981ec84c3b4a3f072a7a2e1899c9fb06c6e6d50742ef4cc9be45bd161a949eee4e1276d8a0086f9d65cd459731d8793da248383e7765f1d3ca2586e10c41eedf169',
     })
 
     await paymentsRepo.updateOrderSessionId(session.id, dbOrder.id)

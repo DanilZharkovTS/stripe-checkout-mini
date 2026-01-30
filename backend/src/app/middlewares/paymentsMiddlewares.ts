@@ -31,7 +31,7 @@ export const appMiddlewares = {
       )
       console.log(3)
 
-      req.stripeCheckoutSession = event.data.object as Stripe.Checkout.Session
+      req.stripeEvent = event as Stripe.Event
 
       next()
     } catch (err) {

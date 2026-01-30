@@ -13,11 +13,9 @@ export const paymentsController = {
       return res.status(500)
     }
   },
-  handleCheckoutSessionCompleted: async (req: Request, res: Response) => {
+  handleWebhook: async (req: Request, res: Response) => {
     try {
-      await paymentsService.handleWebhook(
-        req.stripeCheckoutSession!
-      )
+      await paymentsService.handleWebhook(req.stripeEvent!)
       res.sendStatus(200)
     } catch (err) {
       console.log(err)

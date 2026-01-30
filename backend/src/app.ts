@@ -15,7 +15,7 @@ app.post(
   '/webhooks/stripe/checkout',
   bodyParser.raw({ type: 'application/json' }),
   appMiddlewares.verifyWebhook,
-  paymentsController.handleCheckoutSessionCompleted
+  paymentsController.handleWebhook
 )
 
 app.use(

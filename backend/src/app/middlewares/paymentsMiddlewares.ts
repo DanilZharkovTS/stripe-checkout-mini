@@ -14,12 +14,10 @@ export const appMiddlewares = {
     next()
   },
   verifyWebhook: (req: Request, res: Response, next: NextFunction) => {
-    console.log(1)
 
     const sign = req.headers['stripe-signature']
 
     if (!sign) return res.status(400).json({ message: 'Signature is missing' })
-    console.log(2)
 
     let event: Stripe.Event
 
@@ -29,7 +27,6 @@ export const appMiddlewares = {
         sign,
         process.env.STRIPE_WEBHOOK_SECRET!
       )
-      console.log(3)
 
       req.stripeEvent = event as Stripe.Event
 

@@ -142,22 +142,21 @@ export const paymentsService = {
     await paymentsRepo.updateOrderStatus('failed', orderId)
   },
   invoiceCompleted: async (invoice: Stripe.Invoice) => {
+    const stripe = getStripe()
+
     const subId =
       invoice.lines.data[0].parent?.subscription_item_details?.subscription
     console.log(subId)
+    if (!subId) return
 
     const customerId = invoice.customer
+    if (!customerId) return
 
     const orderResult = await paymentsRepo.findOrderBySub(subId)
     const dbOrder = orderResult.rows[0]
     console.log(dbOrder)
 
     const payload = dbOrder.payload
-    console.log(`INVOICE ORDER ${dbOrder}`)
-    const endDate = new Date(invoice.period_start * 1000)
-    const startDate = new Date(invoice.period_end * 1000)
-
-    console.log(startDate.toISOString(), endDate.toISOString())
 
     const subResult = await paymentsRepo.findSubBySub(subId)
     const dbSub = await subResult.rows[0]
@@ -172,7 +171,13 @@ export const paymentsService = {
         invoice.period_end
       )
       console.log(`SUB CREATED`)
+      return
     }
+
+    await paymentsRepo.updateSubEndPeriod(invoice.period_end, dbSub.id)
+    console.log('SUB WAS UPDATED')
+
+    return
   },
   invoiceFailed: async (invoice: Stripe.Invoice) => {
     const orderId = Number(invoice.metadata?.orderId)

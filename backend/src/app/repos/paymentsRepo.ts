@@ -47,7 +47,7 @@ export const paymentsRepo = {
       [orderId]
     )
   },
-  findOrderBySub: (subId: string | null | undefined) => {
+  findOrderBySub: (subId: string | Stripe.Subscription | null | undefined) => {
     return pool.query(
       `SELECT * FROM orders
       WHERE payload->>'stripe_subscription_id' = $1`,
@@ -77,7 +77,7 @@ export const paymentsRepo = {
   addSubscription: (
     plan: plans,
     period: periods,
-    subId: string | null | undefined,
+    subId: string | Stripe.Subscription | null | undefined,
     customerId: string | Stripe.Customer | Stripe.DeletedCustomer | null,
     currentPeriodEnd: number
   ) => {
@@ -88,9 +88,16 @@ export const paymentsRepo = {
       [plan, period, subId, customerId, currentPeriodEnd]
     )
   },
-  findSubBySub: (
-    subId: string | null | undefined
-  ) => {
+  updateSubEndPeriod: (period: number, subId: string | Stripe.Subscription | null | undefined) => {
+    return pool.query(
+      `UPDATE subscriptions
+      SET current_period_end = to_timestamp($1)
+      WHERE id = $2
+      RETURNING *`,
+      [period, subId]
+    )
+  },
+  findSubBySub: (subId: string | Stripe.Subscription | null | undefined) => {
     return pool.query(
       `SELECT * FROM subscriptions
       WHERE stripe_subscription_id = $1`,

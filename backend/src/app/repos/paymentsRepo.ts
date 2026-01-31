@@ -88,7 +88,10 @@ export const paymentsRepo = {
       [plan, period, subId, customerId, currentPeriodEnd]
     )
   },
-  updateSubEndPeriod: (period: number, subId: string | Stripe.Subscription | null | undefined) => {
+  updateSubEndPeriod: (
+    period: number,
+    subId: string | Stripe.Subscription | null | undefined
+  ) => {
     return pool.query(
       `UPDATE subscriptions
       SET current_period_end = to_timestamp($1)
@@ -100,6 +103,14 @@ export const paymentsRepo = {
   findSubBySub: (subId: string | Stripe.Subscription | null | undefined) => {
     return pool.query(
       `SELECT * FROM subscriptions
+      WHERE stripe_subscription_id = $1`,
+      [subId]
+    )
+  },
+  revokeSubscription: (subId: string) => {
+    return pool.query(
+      `UPDATE subscriptions
+      SET revoked_at = NOW()
       WHERE stripe_subscription_id = $1`,
       [subId]
     )

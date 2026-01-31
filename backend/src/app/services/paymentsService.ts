@@ -180,7 +180,17 @@ export const paymentsService = {
     return
   },
   invoiceFailed: async (invoice: Stripe.Invoice) => {
-    const orderId = Number(invoice.metadata?.orderId)
-    await paymentsRepo.updateOrderStatus('failed', orderId)
+    console.log('INVOICE FAILED');
+    
+    const subId =
+      invoice.lines.data[0].parent?.subscription_item_details?.subscription
+
+    if (!subId) {
+      console.log('No subscription id was provided')
+      return
+    }
+    
+    await paymentsRepo.revokeSubscription(subId)
+    console.log('SUB WAS REVOKED');
   },
 }

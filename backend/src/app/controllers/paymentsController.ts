@@ -13,15 +13,24 @@ export const paymentsController = {
       return res.status(500)
     }
   },
-  handleCheckoutSessionCompleted: async (req: Request, res: Response) => {
+  handleWebhook: async (req: Request, res: Response) => {
     try {
-      await paymentsService.handleCheckoutSessionCompleted(
-        req.stripeCheckoutSession!
-      )
+      await paymentsService.handleWebhook(req.stripeEvent!)
       res.sendStatus(200)
     } catch (err) {
       console.log(err)
       return res.status(400).json('Bad request')
+    }
+  },
+  createCheckoutSubscriptionSession: async (req: Request, res: Response) => {
+    try {
+      const result = await paymentsService.createCheckoutSubscriptionSession(
+        req.body
+      )
+      res.status(200).json(result)
+    } catch (err) {
+      console.error(err)
+      return res.sendStatus(400)
     }
   },
 }

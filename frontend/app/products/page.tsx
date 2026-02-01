@@ -4,6 +4,7 @@ import { service } from './service'
 import { product } from './types'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function ProductsPage() {
   const router = useRouter()
@@ -34,61 +35,69 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen w-full flex justify-center items-center">
-      {!products && (
-        <div className="text-center text-gray-500">No products found.</div>
-      )}
+  <div className="min-h-screen w-full flex flex-col items-center justify-center gap-8">
+    <Link
+      href="/products/subscriptions"
+      className="rounded-xl border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-gray-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-95"
+    >
+      View subscription plans
+    </Link>
 
-      <div className="flex flex-col md:flex-row justify-center gap-8">
-        {products &&
-          products.map((p: product) => (
-            <div
-              key={p.id}
-              className="group flex flex-col rounded-2xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-            >
-              {/* Image */}
-              <div className="mb-4 flex justify-center">
-                {p.image_url ? (
-                  <Image
-                    src={p.image_url}
-                    alt={p.name}
-                    width={200}
-                    height={200}
-                    className="rounded-xl object-contain transition group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="flex h-[200px] w-[200px] items-center justify-center rounded-xl bg-gray-200 text-sm text-gray-500">
-                    No image
-                  </div>
-                )}
-              </div>
+    {!products && (
+      <div className="text-center text-gray-500">
+        No products found.
+      </div>
+    )}
 
-              {/* Content */}
-              <div className="flex flex-1 flex-col gap-2">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {p.name}
-                </h3>
-
-                <p className="text-sm text-gray-600 line-clamp-2">
-                  {p.description}
-                </p>
-
-                <div className="mt-auto flex items-center justify-between">
-                  <span className="text-lg font-bold text-gray-900">
-                    {p.price} cents
-                  </span>
-
-                  <button
-                    onClick={() => handleCheckout(p.id)}
-                    className="rounded-lg bg-lime-400 px-4 py-2 text-sm font-medium text-black transition hover:bg-lime-500 active:scale-95"
-                  >
-                    Buy
-                  </button>
+    <div className="flex flex-col md:flex-row justify-center gap-8">
+      {products &&
+        products.map((p: product) => (
+          <div
+            key={p.id}
+            className="group flex flex-col rounded-2xl bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+          >
+            <div className="mb-4 flex justify-center">
+              {p.image_url ? (
+                <Image
+                  src={p.image_url}
+                  alt={p.name}
+                  width={200}
+                  height={200}
+                  className="rounded-xl object-contain transition group-hover:scale-105"
+                />
+              ) : (
+                <div className="flex h-[200px] w-[200px] items-center justify-center rounded-xl bg-gray-200 text-sm text-gray-500">
+                  No image
                 </div>
+              )}
+            </div>
+
+            <div className="flex flex-1 flex-col gap-2">
+              <h3 className="text-lg font-semibold text-gray-900">
+                {p.name}
+              </h3>
+
+              <p className="text-sm text-gray-600 line-clamp-2">
+                {p.description}
+              </p>
+
+              <div className="mt-auto flex items-center justify-between">
+                <span className="text-lg font-bold text-gray-900">
+                  {p.price} cents
+                </span>
+
+                <button
+                  onClick={() => handleCheckout(p.id)}
+                  className="rounded-lg bg-lime-400 px-4 py-2 text-sm font-medium text-black transition hover:bg-lime-500 active:scale-95"
+                >
+                  Buy
+                </button>
               </div>
             </div>
-          ))}
-      </div>
+          </div>
+        ))}
     </div>
-  )
+  </div>
+)
+
 }

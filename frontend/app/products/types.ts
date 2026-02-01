@@ -14,6 +14,12 @@ export type subscriptionPeriods = 'DAYLY' | 'WEEKLY' | 'MONTHLY'
 export interface subscription {
   plan: subscriptionPlans
   period: subscriptionPeriods
+  price: number
+}
+
+export interface subscriptionCheckoutDTO {
+  plan: subscriptionPlans
+  period: subscriptionPeriods
 }
 
 export type subscriptionVariants = subscription[]

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { subscription } from './types'
+import type { subscriptionCheckoutDTO } from './types'
 
 export const service = {
   getAllProducts: async () => {
@@ -12,7 +12,7 @@ export const service = {
     )
     return res.data
   },
-  getSubscriptionCheckout: async (data: subscription) => {
+  getSubscriptionCheckout: async (data: subscriptionCheckoutDTO) => {
     const res = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/products/subscriptions`,
       data

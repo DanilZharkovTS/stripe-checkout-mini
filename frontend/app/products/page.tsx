@@ -4,6 +4,7 @@ import { service } from './service'
 import { product } from './types'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function ProductsPage() {
   const router = useRouter()
@@ -35,6 +36,7 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen w-full flex justify-center items-center">
+      <Link href={'/products/subscriptions'}>Subscriptions</Link>
       {!products && (
         <div className="text-center text-gray-500">No products found.</div>
       )}
